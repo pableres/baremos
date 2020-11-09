@@ -1,0 +1,34 @@
+#Chupito baremos
+#https://youtu.be/yuRlzjQ7-3c
+
+
+#cargamos los paquetes necesarios
+library(palmerpenguins)
+library(car)
+library(writexl)
+
+#establecemos nuestro directorio de trabajo
+setwd("C:/Users/pable/Desktop/ORS")
+
+#cargamos datos
+data(package = 'palmerpenguins')
+head(penguins)
+df<-as.data.frame(penguins)
+df
+
+#si queremos hacer baremos por sexo
+Machos <- subset(df, sex=='male')
+Hembras <- df[df$sex=='female',]
+
+#los propios baremos
+
+score <- Machos$body_mass_g               # Total score 
+tosc <- sort(unique(Machos$body_mass_g))              # Levels of total score 
+perc <- 100 * (cumsum(prop.table(table(score)))) # Percentiles 
+sura <- 100 * (tosc / max(score))        # Success rate 
+zsco <- sort(unique(scale(score)))       # Z-score 
+tsco <- 50 + 10 * zsco                   # T-score
+baremos<-cbind(tosc,perc,tsco,sura,zsco)
+baremos<-as.data.frame(baremos)
+baremos
+write_xlsx(baremos, "baremos.xlsx")
